@@ -12,22 +12,25 @@ llm1  = HuggingFaceEndpoint(
         task = "text-generation"
 )
 
-'''
 llm2  = HuggingFaceEndpoint(
         repo_id = "deepseek-ai/DeepSeek-V4-Flash",
         task = "text-generation"
 )
-'''
 
 model1 = ChatHuggingFace(llm=llm1)
-#model2 = ChatHuggingFace(llm=llm2)
+model2 = ChatHuggingFace(llm=llm2)
 
 parser = StrOutputParser()
 
-prompt = PromptTemplate(
+prompt1 = PromptTemplate(
     template = 'Write a joke on {topic}',
     input_variables=['topic']
 )
 
-chain = RunnableSequence(prompt,model1,parser)
+prompt2 = PromptTemplate(
+    template = 'Explain the joke - {joke}',
+    input_variables=['joke']
+)
+
+chain = RunnableSequence(prompt1,model1,parser,prompt2,model2,parser)
 print(chain.invoke({'topic':'cricket'}))
